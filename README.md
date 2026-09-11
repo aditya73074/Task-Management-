@@ -2,56 +2,80 @@ QA Assessment — Task Management Application
 Name: Aditya Yadav
 Email: ay6314511@gmail.com
 Contact: 7307491615
+
 Context
-This is a Task Management application where users can register, log in, and then create, view, edit, and delete their own tasks. Tasks are stored in a database and displayed as a list.
-The application is close to production release and has no existing test documentation. So I had to think from scratch about what needs to be tested.
-I have covered three areas:
-•	Test scenarios and test cases (positive, negative, edge)
-•	Input validation and error handling
-•	Bug and risk areas that can be identified without executing the application
-________________________________________
-1. Test Scenarios
+This is a Task Management application where users can register, log in, and then create, view, edit, and delete their own tasks. Tasks are stored in a database and displayed as a list. The application is close to production release and has no existing test documentation.
+
+The following test documentation covers three key areas:
+
+Test scenarios and test cases (positive, negative, edge)
+
+Input validation and error handling
+
+Bug and risk areas identified without executing the application
+
+Test Scenarios
 Registration
-•	A new user should be able to register with valid details.
-•	Registration should not be allowed with an already registered email.
-•	Blank or incorrectly formatted fields should show errors.
-•	Password and confirm password must match.
-•	Weak passwords should be rejected.
-•	Email should be case-insensitive (User@x.com and user@x.com treated the same).
-•	SQL injection or XSS in name/email should be handled safely.
+A new user should be able to register with valid details.
+
+Registration should not be allowed with an already registered email.
+
+Blank or incorrectly formatted fields should show errors.
+
+Password and confirm password must match.
+
+Weak passwords should be rejected.
+
+Email should be case-insensitive (User@x.com and user@x.com treated the same).
+
+SQL injection or XSS in name/email should be handled safely.
+
 Login
-•	Login should succeed with valid credentials.
-•	Wrong password or unregistered email should show an error.
-•	Blank fields should show validation errors.
-•	Repeated wrong password attempts should trigger lockout or rate limiting.
-•	After session timeout, the user should be asked to log in again.
-•	Task pages should not be accessible without login.
-•	SQL injection in login fields should not work.
+Login should succeed with valid credentials.
+
+Wrong password or unregistered email should show an error.
+
+Blank fields should show validation errors.
+
+Repeated wrong password attempts should trigger lockout or rate limiting.
+
+After session timeout, the user should be asked to log in again.
+
+Task pages should not be accessible without login.
+
+SQL injection in login fields should not work.
+
 Task CRUD
-•	A valid task should be created and appear in the list.
-•	Empty or over-length data should show an error.
-•	A user should only see their own tasks.
-•	A task should be editable, and cancelling should not save changes.
-•	Deletion should ask for confirmation, and cancelling should keep the task.
-•	Another user's task should not be accessible by changing the URL.
-•	Data should persist after a page refresh.
-•	If the database or network fails, the user should see a clean error message.
+A valid task should be created and appear in the list.
+
+Empty or over-length data should show an error.
+
+A user should only see their own tasks.
+
+A task should be editable, and cancelling should not save changes.
+
+Deletion should ask for confirmation, and cancelling should keep the task.
+
+Another user's task should not be accessible by changing the URL.
+
+Data should persist after a page refresh.
+
+If the database or network fails, the user should see a clean error message.
+
 Input Validation & Error Handling
-•	Required fields should be validated.
-•	Email, password, date, priority, and status should be validated.
-•	Max length and special characters should be handled.
-•	SQLi and XSS should be blocked.
-•	Server errors, session expiry, and offline scenarios should show friendly messages.
-•	Error messages should be field-specific and clear, without technical stack traces.
-________________________________________
+Required fields should be validated.
 
+Email, password, date, priority, and status should be validated.
 
+Max length and special characters should be handled.
 
+SQLi and XSS should be blocked.
 
+Server errors, session expiry, and offline scenarios should show friendly messages.
 
+Error messages should be field-specific and clear, without technical stack traces.
 
-
-2. Test Cases
+Test Cases
 Registration
 ID	Test Scenario	Steps / Data	Expected Result	Type
 REG-01	Valid registration	Unique email + valid password + matching confirm password	Account is created; redirect to login/dashboard	Positive
@@ -129,8 +153,8 @@ VAL-09	Session expired	Expire session and perform an action	Redirect to login; a
 VAL-10	Network offline	Disable network and submit	Offline/retry message; no data corruption	Negative
 VAL-11	SQLi/XSS	Inject in all input fields	Escaped/sanitized; no execution	Security
 VAL-12	Unicode/emoji	Use Hindi/Chinese/emoji text	Saved and displayed correctly	Edge
-________________________________________
-3. Bug / Risk Areas (without executing the application)
+Bug / Risk Areas (Without Executing the Application)
+Bug ID	Description	Severity	Reason / Impact
 Bug ID	Description	Severity	Reason / Impact
 BUG-01	Missing authorization on task APIs — changing the task ID exposes another user's task	Critical	IDOR/BOLA; data leak; unauthorized edit/delete
 BUG-02	Passwords stored in plain text or with weak hashing	Critical	Database leak compromises all accounts
@@ -142,4 +166,3 @@ BUG-07	Weak session management — no timeout, insecure cookie, fixation	Major/C
 BUG-08	No server-side validation or length check; raw DB errors exposed	Major	Truncation, crash, DoS, information disclosure
 BUG-09	Lost update / last-write-wins on concurrent edit	Major	One user's change overwrites another's
 BUG-10	No confirmation, soft delete, or undo on delete	Minor	Accidental permanent data loss; poor UX
-
