@@ -3,18 +3,20 @@ Name: Aditya Yadav
 Email: ay6314511@gmail.com
 Contact: 7307491615
 
-Context
-This is a Task Management application where users can register, log in, and then create, view, edit, and delete their own tasks. Tasks are stored in a database and displayed as a list. The application is close to production release and has no existing test documentation.
+ Context
+This is a Task Management application where users can register, log in, and then create, view, edit, and delete their own tasks. Tasks are stored in a database and displayed as a list.
 
-The following test documentation covers three key areas:
+The application is close to production release and has no existing test documentation. So I had to think from scratch about what needs to be tested.
+
+I have covered three areas:
 
 Test scenarios and test cases (positive, negative, edge)
 
 Input validation and error handling
 
-Bug and risk areas identified without executing the application
+Bug and risk areas that can be identified without executing the application
 
-Test Scenarios
+1. Test Scenarios
 Registration
 A new user should be able to register with valid details.
 
@@ -75,7 +77,7 @@ Server errors, session expiry, and offline scenarios should show friendly messag
 
 Error messages should be field-specific and clear, without technical stack traces.
 
-Test Cases
+2. Test Cases
 Registration
 ID	Test Scenario	Steps / Data	Expected Result	Type
 REG-01	Valid registration	Unique email + valid password + matching confirm password	Account is created; redirect to login/dashboard	Positive
@@ -153,8 +155,7 @@ VAL-09	Session expired	Expire session and perform an action	Redirect to login; a
 VAL-10	Network offline	Disable network and submit	Offline/retry message; no data corruption	Negative
 VAL-11	SQLi/XSS	Inject in all input fields	Escaped/sanitized; no execution	Security
 VAL-12	Unicode/emoji	Use Hindi/Chinese/emoji text	Saved and displayed correctly	Edge
-Bug / Risk Areas (Without Executing the Application)
-Bug ID	Description	Severity	Reason / Impact
+3. Bug / Risk Areas (without executing the application)
 Bug ID	Description	Severity	Reason / Impact
 BUG-01	Missing authorization on task APIs — changing the task ID exposes another user's task	Critical	IDOR/BOLA; data leak; unauthorized edit/delete
 BUG-02	Passwords stored in plain text or with weak hashing	Critical	Database leak compromises all accounts
